@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+*.log
+__pycache__/
+.DS_Store
+
+# Next.js build output lives in web/
+web/.next/
+web/out/
+
+# TypeScript incremental build cache
+*.tsbuildinfo

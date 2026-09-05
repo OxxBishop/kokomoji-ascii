@@ -1,0 +1,64 @@
+{
+  "generatedAt": "2026-09-05T13:13:58.233Z",
+  "densities": [
+    40,
+    55,
+    70,
+    85,
+    100,
+    115,
+    130,
+    140
+  ],
+  "usingPlaceholder": false,
+  "pieces": [
+    {
+      "id": "kokomoji",
+      "title": "Kokomoji",
+      "source": "kokomoji.jpg",
+      "placeholder": false,
+      "densities": [
+        {
+          "cols": 40,
+          "rows": 20,
+          "file": "kokomoji-40.json"
+        },
+        {
+          "cols": 55,
+          "rows": 28,
+          "file": "kokomoji-55.json"
+        },
+        {
+          "cols": 70,
+          "rows": 35,
+          "file": "kokomoji-70.json"
+        },
+        {
+          "cols": 85,
+          "rows": 43,
+          "file": "kokomoji-85.json"
+        },
+        {
+          "cols": 100,
+          "rows": 50,
+          "file": "kokomoji-100.json"
+        },
+        {
+          "cols": 115,
+          "rows": 58,
+          "file": "kokomoji-115.json"
+        },
+        {
+          "cols": 130,
+          "rows": 65,
+          "file": "kokomoji-130.json"
+        },
+        {
+          "cols": 140,
+          "rows": 70,
+          "file": "kokomoji-140.json"
+        }
+      ]
+    }
+  ]
+}

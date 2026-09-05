@@ -1,0 +1,16 @@
+{
+  "name": "kokomoji-ascii",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "KOKOMOJI ASCII art toolkit — image to ANSI/ASCII grid conversion, terminal player, and web renderer.",
+  "scripts": {
+    "convert": "node scripts/convert.js",
+    "play": "node scripts/play.js",
+    "build:grids": "node scripts/build-grids.js",
+    "art:placeholder": "node scripts/make-placeholder-art.js"
+  },
+  "dependencies": {
+    "sharp": "^0.33.5"
+  }
+}
