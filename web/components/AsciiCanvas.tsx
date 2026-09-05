@@ -14,6 +14,8 @@ interface Props {
   palette: Palette;
   /** Bump to replay the decode animation. Density changes should not bump it. */
   decodeKey: number;
+  /** Hold on noise this long before resolving, so a wall of tiles can stagger. */
+  decodeDelay?: number;
   onClick: () => void;
 }
 
@@ -29,7 +31,13 @@ function shuffledOrder(length: number): Uint32Array {
   return order;
 }
 
-export default function AsciiCanvas({ grid, palette, decodeKey, onClick }: Props) {
+export default function AsciiCanvas({
+  grid,
+  palette,
+  decodeKey,
+  decodeDelay = 0,
+  onClick,
+}: Props) {
   const frameRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const [fontSize, setFontSize] = useState(10);
@@ -103,7 +111,8 @@ export default function AsciiCanvas({ grid, palette, decodeKey, onClick }: Props
   // DECODE_MS. Spans are mutated directly — re-rendering ~10k React nodes at
   // 20fps would drop frames.
   useEffect(() => {
-    const cells = gridRefValue.current.cells;
+    const owned = gridRefValue.current;
+    const cells = owned.cells;
     const nodes = spans();
     const total = cells.length;
     if (nodes.length !== total) return;
@@ -122,14 +131,22 @@ export default function AsciiCanvas({ grid, palette, decodeKey, onClick }: Props
       nodes[i].style.color = SCRAMBLE_COLOR;
     }
 
-    const start = performance.now();
+    // The noise is already painted; the delay just holds it there.
+    const start = performance.now() + decodeDelay;
     const frameMs = 1000 / DECODE_FPS;
     let lastFrame = -frameMs;
     let cursor = 0;
     let raf = 0;
 
     const tick = (now: number) => {
+      // The grid moved on without us; stop rather than paint stale cells.
+      if (gridRefValue.current !== owned) return;
+
       const elapsed = now - start;
+      if (elapsed < 0) {
+        raf = requestAnimationFrame(tick);
+        return;
+      }
 
       // Step on the animation's own clock, not the display's, so the decode
       // stays chunky at 20fps on a 120Hz screen.
@@ -149,7 +166,7 @@ export default function AsciiCanvas({ grid, palette, decodeKey, onClick }: Props
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [decodeKey]);
+  }, [decodeKey, decodeDelay]);
 
   // Recolour on palette change — cells that have already landed, only.
   useEffect(() => {

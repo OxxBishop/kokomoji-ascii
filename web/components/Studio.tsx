@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import AsciiCanvas from './AsciiCanvas';
+import Wall from './Wall';
 import {
   CELL_ASPECT,
   PALETTES,
@@ -24,6 +25,9 @@ export default function Studio({ manifest }: Props) {
   const [paletteIndex, setPaletteIndex] = useState(0);
   const [decodeKey, setDecodeKey] = useState(0);
   const [grid, setGrid] = useState<Grid | null>(null);
+  // The wall only earns its place with more than one piece.
+  const [wall, setWall] = useState(false);
+  const showWall = wall && manifest.pieces.length > 1;
 
   const cache = useRef(new Map<string, Grid>());
   const piece = manifest.pieces[pieceIndex];
@@ -51,6 +55,15 @@ export default function Studio({ manifest }: Props) {
     cache.current.set(file, unpacked);
     return unpacked;
   }, []);
+
+  // Switching piece clears the grid first. The new one arrives asynchronously,
+  // and without this the canvas keeps animating the outgoing piece — its
+  // requestAnimationFrame loop would still be writing the old characters and
+  // colours over the incoming art. Unmounting cancels it. Density changes
+  // deliberately do NOT clear, so the slider swaps in place.
+  useEffect(() => {
+    setGrid(null);
+  }, [piece.id]);
 
   // Swap in the current density.
   useEffect(() => {
@@ -80,10 +93,19 @@ export default function Studio({ manifest }: Props) {
 
         <section className="flex flex-col border border-koko-line bg-koko-panel shadow-[0_0_60px_-15px_rgba(232,100,30,0.25)]">
           <TitleBar
-            title={piece.title}
-            right={grid ? `${grid.cols}×${grid.rows}` : '—'}
+            title={showWall ? 'collection' : piece.title}
+            right={
+              showWall
+                ? `${manifest.pieces.length} pieces`
+                : grid
+                  ? `${grid.cols}×${grid.rows}`
+                  : '—'
+            }
           />
 
+          {showWall ? (
+            <Wall pieces={manifest.pieces} load={load} decodeKey={decodeKey} />
+          ) : (
           <div className="flex justify-center overflow-hidden bg-koko-bg p-1.5">
             {/* Height-driven, so the art always fits the viewport and the box
                 matches the grid's own aspect instead of letterboxing it. */}
@@ -111,6 +133,7 @@ export default function Studio({ manifest }: Props) {
               )}
             </div>
           </div>
+          )}
 
           <StatusBar
             requestedCols={requestedCols}
@@ -121,10 +144,16 @@ export default function Studio({ manifest }: Props) {
             onPalette={cyclePalette}
             onReplay={() => setDecodeKey((key) => key + 1)}
             cells={grid ? grid.cells.length : 0}
+            wall={showWall}
+            canWall={manifest.pieces.length > 1}
+            onWall={() => {
+              setWall((on) => !on);
+              setDecodeKey((key) => key + 1);
+            }}
           />
         </section>
 
-        {manifest.pieces.length > 1 && (
+        {manifest.pieces.length > 1 && !showWall && (
           <nav className="flex flex-wrap justify-center gap-2 font-mono text-[11px]">
             {manifest.pieces.map((entry, index) => (
               <button
@@ -194,6 +223,9 @@ interface StatusBarProps {
   onPalette: () => void;
   onReplay: () => void;
   cells: number;
+  wall: boolean;
+  canWall: boolean;
+  onWall: () => void;
 }
 
 function StatusBar({
@@ -205,12 +237,17 @@ function StatusBar({
   onPalette,
   onReplay,
   cells,
+  wall,
+  canWall,
+  onWall,
 }: StatusBarProps) {
   const snapped = requestedCols !== actualCols;
 
   return (
     <div className="flex flex-col gap-3 border-t border-koko-line px-3 py-3 font-mono text-[11px] text-koko-dim sm:flex-row sm:items-center sm:gap-6">
-      <label className="flex flex-1 items-center gap-3">
+      <label
+        className={`flex-1 items-center gap-3 ${wall ? 'hidden' : 'flex'}`}
+      >
         <span className="tracking-widest">DENSITY</span>
         <input
           type="range"
@@ -228,9 +265,27 @@ function StatusBar({
         </span>
       </label>
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-1 items-center gap-4">
+        {wall && (
+          <span className="flex-1 tracking-widest text-koko-line">
+            CLICK ANY TILE TO RECOLOUR IT
+          </span>
+        )}
+
+        {canWall && (
+          <button
+            onClick={onWall}
+            className={`tracking-widest transition-colors ${
+              wall ? 'text-koko-accent' : 'hover:text-koko-text'
+            }`}
+          >
+            [{wall ? 'SINGLE' : 'WALL'}]
+          </button>
+        )}
+
         <button
           onClick={onPalette}
+          hidden={wall}
           className="flex items-center gap-2 tracking-widest transition-colors hover:text-koko-text"
         >
           <i
@@ -241,7 +296,10 @@ function StatusBar({
           {paletteLabel}
         </button>
 
-        <span className="hidden tabular-nums text-koko-dim/60 sm:inline">
+        <span
+          className="hidden tabular-nums text-koko-dim/60 sm:inline"
+          hidden={wall}
+        >
           {cells.toLocaleString()} CELLS
         </span>
 

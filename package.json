@@ -8,7 +8,8 @@
     "convert": "node scripts/convert.js",
     "play": "node scripts/play.js",
     "build:grids": "node scripts/build-grids.js",
-    "art:placeholder": "node scripts/make-placeholder-art.js"
+    "art:placeholder": "node scripts/make-placeholder-art.js",
+    "check": "node scripts/check-grids.js"
   },
   "dependencies": {
     "sharp": "^0.33.5"

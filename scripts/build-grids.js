@@ -144,6 +144,8 @@ async function main() {
   console.error(`\nplay it:  node scripts/play.js web/public/grids/${sample.file} --loop`);
 }
 
+module.exports = { imagesIn, ART_DIR, PLACEHOLDER_DIR, DENSITIES };
+
 if (require.main === module) {
   main().catch((err) => {
     console.error(`build-grids: ${err.message}`);
