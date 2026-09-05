@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05T13:13:58.233Z",
+  "generatedAt": "2026-09-05T15:31:16.041Z",
   "densities": [
     40,
     55,
@@ -57,6 +57,102 @@
           "cols": 140,
           "rows": 70,
           "file": "kokomoji-140.json"
+        }
+      ]
+    },
+    {
+      "id": "kokomoji2",
+      "title": "Kokomoji2",
+      "source": "kokomoji2.jpeg",
+      "placeholder": false,
+      "densities": [
+        {
+          "cols": 40,
+          "rows": 20,
+          "file": "kokomoji2-40.json"
+        },
+        {
+          "cols": 55,
+          "rows": 28,
+          "file": "kokomoji2-55.json"
+        },
+        {
+          "cols": 70,
+          "rows": 35,
+          "file": "kokomoji2-70.json"
+        },
+        {
+          "cols": 85,
+          "rows": 43,
+          "file": "kokomoji2-85.json"
+        },
+        {
+          "cols": 100,
+          "rows": 50,
+          "file": "kokomoji2-100.json"
+        },
+        {
+          "cols": 115,
+          "rows": 58,
+          "file": "kokomoji2-115.json"
+        },
+        {
+          "cols": 130,
+          "rows": 65,
+          "file": "kokomoji2-130.json"
+        },
+        {
+          "cols": 140,
+          "rows": 70,
+          "file": "kokomoji2-140.json"
+        }
+      ]
+    },
+    {
+      "id": "kokomoji3",
+      "title": "Kokomoji3",
+      "source": "kokomoji3.jpeg",
+      "placeholder": false,
+      "densities": [
+        {
+          "cols": 40,
+          "rows": 20,
+          "file": "kokomoji3-40.json"
+        },
+        {
+          "cols": 55,
+          "rows": 28,
+          "file": "kokomoji3-55.json"
+        },
+        {
+          "cols": 70,
+          "rows": 35,
+          "file": "kokomoji3-70.json"
+        },
+        {
+          "cols": 85,
+          "rows": 43,
+          "file": "kokomoji3-85.json"
+        },
+        {
+          "cols": 100,
+          "rows": 50,
+          "file": "kokomoji3-100.json"
+        },
+        {
+          "cols": 115,
+          "rows": 58,
+          "file": "kokomoji3-115.json"
+        },
+        {
+          "cols": 130,
+          "rows": 65,
+          "file": "kokomoji3-130.json"
+        },
+        {
+          "cols": 140,
+          "rows": 70,
+          "file": "kokomoji3-140.json"
         }
       ]
     }
